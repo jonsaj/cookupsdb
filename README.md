@@ -8,7 +8,7 @@ this readme isn't very helpful yet. Check out the readme [here](https://github.c
 ##Examples
 
 ```javascript
-var db = require('./cookModule');
+var db = require('cookupsdb');
 
 var newUser = {
                 uname:'billnye',
