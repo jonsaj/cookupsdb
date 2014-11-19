@@ -13,11 +13,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/jonsaj/cookupsDB.git"
-  }
+  },
   "keywords":{
     "cookups",
     "cookupsdb"
-  }
+  },
   "author": "Jan Saj",
   "license": "MIT"
 }
