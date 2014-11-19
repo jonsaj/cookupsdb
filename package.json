@@ -1,5 +1,5 @@
 {
-  "name": "cookModule",
+  "name": "cookupsDB",
   "version": "0.0.1",
   "description": "CookupsDatabase Access Module",
   "main": "index.js",
