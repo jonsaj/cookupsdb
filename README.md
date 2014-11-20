@@ -91,7 +91,7 @@ In general, the module functions will require two arguments: a **Request Object*
 Request object formats are specific to each function, but use similar tags, such as *uid* *uname* *email* *password* *ingredients[]*. More detailed documentation soon.
 
 ```javascript
-var db = require('cookModule');
+var db = require('cookupsdb');
 ```
 ##Examples:
 
@@ -100,7 +100,7 @@ Register using an object with manditory {uname, email, password}. Optional {bio,
 Successful registration will return user object with user properties, excluding the password.
 **Note:** duplicate emails not allowed in system. Working on an error response to handle this case.
 ```javascript
-var db = require('./cookModule');
+var db = require('cookupsdb');
 
 var newUser = {
 				uname:'billnye',
@@ -122,7 +122,7 @@ Login using a request object {email, password}
 If successful, returned available fields as user object {uid, uname, email, bio, picture}
 Unsuccessful, error will be a descriptive error string: wrong pass, no user found
 ```javascript
-var db = require('./cookModule');
+var db = require('cookupsdb');
 
 var user = {
 			email: 'bill@nye.com',
@@ -206,9 +206,6 @@ requires useremail and password
 Misc
 ========================================
 	
-##postgres node modue: pg
-Currently, npm install won't be necessary for the pg module. The node_modules direcotry containing pg is inlcuded in the cookModule/ directory, where it is used. This will need to be changed, but for now, you don't have to worry about npm prep for this module.
-
 # Currently Unimplemented
 - recipe attributes: holiday, course, cuisine
 
