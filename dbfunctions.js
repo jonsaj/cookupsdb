@@ -651,13 +651,9 @@ function deleteUserBlog(uid, callback){
 /*
 	
 */
-function search(uri, callback){
+function search(query, callback){
 
-	var query = JSON.parse(decodeURI(uri));
-/*
-	console.log(query);
-	return;
-*/
+
 	var stmtArr = [];
 	var stmt = "SELECT * FROM recipes WHERE ";
 	stmt += "true "; //added true so I don't have to deal with comma logic everywhere.
