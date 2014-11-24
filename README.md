@@ -14,7 +14,7 @@ Example search Object
 ```javascript
 example object:
 var query = {
-        allowedIngredient:['eggs','milk],
+        allowedIngredient:['eggs','milk'],
         recipeName:'pancake',
         totalTime:10,
         maxTotalTimeInSeconds:600,
