@@ -2,13 +2,14 @@
   "name": "cookupsdb",
   "version": "0.0.63",
   "description": "CookupsDatabase Access Module",
-  "main": "dbfunctions.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "pg": "3.6.3",
-    "squel": "3.9.1"
+    "squel": "3.9.1",
+    "request": "~2.48"
   },
   "repository": {
     "type": "git",
