@@ -9,6 +9,51 @@ To use the database, you will need to perform a small bit of set up
 Each of these steps are detailed below
 
 
+Example search Object
+============================
+```javascript
+example object:
+var query = {
+        allowedIngredient:['eggs','milk],
+        recipeName:'pancake',
+        totalTime:10,
+        maxTotalTimeInSeconds:600,
+        yield:5,
+        numberOfServings:5,
+        rating:3.5,
+        nutrition: {
+                enerc_kcal: {
+                        min:100,
+                        max:1000
+                }
+        },
+        flavor:{
+                bitter:{
+                        min:.1,
+                        max:.7
+                },
+                sweet:{
+                        min:0,
+                        max:.9
+                }
+                sour:{
+                        min:0,
+                        max:0
+                }
+                salty:{
+                        min:0,
+                        max:1
+                }
+                meaty:{
+                        min:.3,
+                        max:1
+                }
+        }
+} 
+```
+
+
+
 Database Prep Work
 ========================================
 
