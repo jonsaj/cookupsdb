@@ -649,7 +649,44 @@ function deleteUserBlog(uid, callback){
 }
 
 /*
-	
+example object:
+var query = {
+	allowedIngredient:['eggs','milk'],
+	recipeName:'pancake',
+	totalTime:10,
+	maxTotalTimeInSeconds:600,
+	yield:5,
+	numberOfServings:5,
+	rating:3.5,
+	nutrition: {
+		enerc_kcal: {
+			min:100,
+			max:1000
+		}
+	},
+	flavor:{
+		bitter:{
+			min:.1,
+			max:.7
+		},
+		sweet:{
+			min:0,
+			max:.9
+		}
+		sour:{
+			min:0,
+			max:0
+		}
+		salty:{
+			min:0,
+			max:1
+		}
+		meaty:{
+			min:.3,
+			max:1
+		}
+	}
+}	
 */
 function search(query, callback){
 
@@ -657,53 +694,84 @@ function search(query, callback){
 	var stmtArr = [];
 	var stmt = "SELECT * FROM recipes WHERE ";
 	stmt += "true "; //added true so I don't have to deal with comma logic everywhere.
-	if(query.ingredients){
-		stmtArr.push(query.ingredients);
+	if(query.alowedIngredient){
+		stmtArr.push(query.alowedIngredient);
 		stmt += " and ingredients @> $" + stmtArr.length + "::text[] ";
 	}
-	if(query.name){
-		stmtArr.push(query.name);
+	if(query.recipeName){
+		stmtArr.push(query.recipeName);
 		stmt += " and LOWER(name) like concat('%',LOWER($" + stmtArr.length + "),'%') ";
 	}
-	if(query.maxtime){
-		stmtArr.push(query.maxtime);
+	if(query.totalTime){
+		stmtArr.push(query.totalTime);
 		stmt += " and totaltime <= $" + stmtArr.length;
 	}
-	if(query.mintime){
-		stmtArr.push(query.mintime);
-		stmt += " and totaltime >= $" + stmtArr.length;
+	if(query.maxTotalTimeInSeconds){
+		stmtArr.push(query.maxTotalTimeInSeconds);
+		stmt += " and totaltime <= $" + stmtArr.length;
 	}
-	if(query.minservings){
-		stmtArr.push(query.minservings);
+	if(query.yield){
+		stmtArr.push(query.yield);
 		stmt += " and servings >= $" + stmtArr.length;
 	}
-	if(query.maxservings){
-		stmtArr.push(query.maxservings);
+	if(query.numberOfServings){
+		stmtArr.push(query.numberOfServings);
 		stmt += " and servings <= $" + stmtArr.length;
 	}
 	if(query.rating){
 		stmtArr.push(query.rating);
 		stmt += " and rating >= $" + stmtArr.length;
 	}
-	if(query.calories){
-		stmtArr.push(query.calories);
+// nutrition.ATTR_NAME.{min|max}
+	if(query.nutrition.enerc_kcal.max){
+		stmtArr.push(query.nutrition.enerc_kcal.max);
 		stmt += " and calories <= $" + stmtArr.length;
 	}
-	if(query.bitter){
-		stmt += " and flavor_bitter > 0";
+	if(query.nutrition.enerc_kcal.min){
+		stmtArr.push(query.nutrition.enerc_kcal.min);
+		stmt += " and calories > $" + stmtArr.length;
 	}
-	if(query.sweet){
-		stmt += " and flavor_sweet > 0";
+	if(query.flavor.bitter.max){
+		stmtArr.push(query.nutrition.bitter.max);
+		stmt += " and flavor_bitter <= $" + stmtArr.length;
 	}
-	if(query.sour){
-		stmt += " and flavor_sour > 0";
+	if(query.flavor.bitter.min){
+		stmtArr.push(query.nutrition.bitter.min);
+		stmt += " and flavor_bitter >= $" + stmtArr.length;
 	}
-	if(query.salty){
-		stmt += " and flavor_salty > 0";
+	if(query.flavor.sweet.max){
+		stmtArr.push(query.nutrition.bitter.max);
+		stmt += " and flavor_sweet <= $" + stmtArr.length;
 	}
-	if(query.meaty){
-		stmt += " and flavor_meaty > 0";
+	if(query.flavor.sweet.min){
+		stmtArr.push(query.nutrition.bitter.min);
+		stmt += " and flavor_sweet >= $" + stmtArr.length;
 	}
+	if(query.flavor.sour.max){
+		stmtArr.push(query.nutrition.sour.max);
+		stmt += " and flavor_sour <= $" + stmtArr.length;
+	}
+	if(query.flavor.sour.min){
+		stmtArr.push(query.nutrition.sour.min);
+		stmt += " and flavor_sour >= $" + stmtArr.length;
+	}
+	if(query.flavor.salty.max){
+		stmtArr.push(query.nutrition.salty.max);
+		stmt += " and flavor_salty <= $" + stmtArr.length;
+	}
+	if(query.flavor.salty.min){
+		stmtArr.push(query.nutrition.salty.min);
+		stmt += " and flavor_salty >= $" + stmtArr.length;
+	}
+	if(query.flavor.meaty.max){
+		stmtArr.push(query.nutrition.meaty.max);
+		stmt += " and flavor_meaty <= $" + stmtArr.length;
+	}
+	if(query.flavor.meaty.min){
+		stmtArr.push(query.nutrition.meaty.min);
+		stmt += " and flavor_meaty >= $" + stmtArr.length;
+	}
+
 	stmt += ";";
 	pg.connect(conString, function(err, client, done){
 		if(err){
