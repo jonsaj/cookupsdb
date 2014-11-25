@@ -24,9 +24,26 @@ function getRecipeById(rid, callback){
 }
 
 function search(query, callback){
+
+	
 	db.search(query, function(err1, result1){
+		
+		for(var i in query.flavor){
+			if(i.min === 0){
+				delete i.min;
+			}
+			if(i.max === 1){
+				delete i.max;
+			}
+
+		}
+
 		ym.search(query, function(err2, result2){
-			if(err2 && err1) return console.error("yummly error", err2);
+			if(err2 && err1){
+				callback("Yummly and Internal DB error");
+					console.error("db error", err1);
+				 return console.error("yummly error", err2);
+			}
 			if(err1){
 				callback(err2, result2);
 				return console.error("database error", err1);

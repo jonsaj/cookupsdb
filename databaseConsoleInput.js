@@ -56,6 +56,7 @@ if (process.argv.length < 3) {
 else if(process.argv[2] === '-s' ){
 	var quer = {};
 	quer.allowedIngredient = ['milk'];
+	quer.allowedIngredient.push("flour");
 	//console.log(quer);
 	db.search(quer, function(error, result){
 		if(error) return console.log(error);
