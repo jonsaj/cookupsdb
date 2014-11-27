@@ -1,6 +1,6 @@
 {
   "name": "cookupsdb",
-  "version": "0.0.73",
+  "version": "0.0.731",
   "description": "CookupsDatabase Access Module",
   "main": "index.js",
   "scripts": {
