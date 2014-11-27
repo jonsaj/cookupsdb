@@ -38,6 +38,7 @@ create table recipes(
 	imagename text,
 	calories int,
 	uid int DEFAULT 1,
+	imagenamesmall text,
 	unique(name),
 	primary key (rid),
 	foreign key(uid) references users
