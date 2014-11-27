@@ -7,7 +7,7 @@ create table users (
 	email varchar(40),
 	password varchar(25),
 	bio text,
-	picture varchar(25), -- file name, append suffix+extension (nameLarge.png)
+	picture text, -- file name, append suffix+extension (nameLarge.png)
 	primary key (uid),
 	unique(email)
 	);
