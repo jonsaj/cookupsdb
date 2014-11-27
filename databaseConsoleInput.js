@@ -131,7 +131,9 @@ else if(process.argv[2] === '-bd' && process.argv.length >= 4){
 	});
 }
 else if(process.argv[2] === '-ri' && process.argv.length >= 4){
-	var rec = {rid:parseInt(process.argv[3])};
+	var rec;
+	if(isNaN(process.argv[3])) rec = {rid:process.argv[3]};
+	else rec = {rid:parseInt(process.argv[3])};
 	db.getRecipeById(rec.rid, function(error, result){
 		if(error) return console.log(error);
 		else console.log(result);
@@ -148,7 +150,11 @@ else if(process.argv[2] === '-l'){
 	var user = {email:process.argv[3], password:process.argv[4]};
 	db.login(user, function(error, result){
 		if(error) return console.log(error);
-		else console.log( "User " + result.uid + " logged in. Welcome, " + result.uname );		
+		else {
+			console.log("returned:");
+			console.log(result);
+			console.log( "User " + result.uid + " logged in. Welcome, " + result.uname );		
+		}
 	});
 }
 
