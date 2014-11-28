@@ -56,7 +56,7 @@ function search(query, callback){
 			   if it has, adjust the db search starting point
 			   and return these results. we have enough, don't need to query yummly yet.
 			*/
-			if(Math.floor((query.dbstart + result1.length())/query.maxResult) >= Math.floor(query.dbstart/query.maxResult)){
+			if(Math.floor((query.dbstart + result1.length)/query.maxResult) >= Math.floor(query.dbstart/query.maxResult)){
 				callback(err1, result1, query);
 				return;	
 			}
@@ -64,7 +64,7 @@ function search(query, callback){
 			   adjust maxresults remporarily
 			   this should alwyas return true, else the db is returning too many resuts
 			*/
-			else if( (query.dbstart + result1.length()) < (query.dbstart + query.maxResult)){
+			else if( (query.dbstart + result1.length) < (query.dbstart + query.maxResult)){
 				query.start += result1.length
 			}else{
 				err1 = "db returned too many results. This shoud not happen";
@@ -74,8 +74,8 @@ function search(query, callback){
 		   Continue with a yummly query on the remaining length of the page
 		*/
 		else {
-			if(!err1 && (query.start + result1.length())<(query.start + query.maxResult)){
-				query.maxResult -= result1.length();
+			if(!err1 && (query.start + result1.length)<(query.start + query.maxResult)){
+				query.maxResult -= result1.length;
 			}
 
 			ym.search(query, function(err2, result2){
