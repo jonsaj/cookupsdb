@@ -44,7 +44,7 @@ function search(query, callback){
 	if(! query.maxResult) query.maxResult = 6;
 	query.tempMaxResult = query.maxResult;
 	if(! query.start) query.start = 0;
-	if(! query.dbstart) query.dbstart = queury.start;
+	if(! query.dbstart) query.dbstart = query.start;
  
 	if(query.q) query.recipeName = query.q; //this is to fix my yummly name blunder.
 
