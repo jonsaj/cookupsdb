@@ -28,8 +28,7 @@ function dbsearch(query, callback){
 });
 
 function search(query, callback){
-
-	
+	if(query.q) query.recipeName = query.q;
 	db.search(query, function(err1, result1){
 		
 		for(var i in query.flavor){
