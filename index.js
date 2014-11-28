@@ -25,7 +25,7 @@ function getRecipeById(rid, callback){
 
 function dbsearch(query, callback){
 	db.search(query,callback);
-});
+};
 
 function search(query, callback){
 
