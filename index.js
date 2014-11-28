@@ -56,7 +56,7 @@ function search(query, callback){
 			   if it has, adjust the db search starting point
 			   and return these results. we have enough, don't need to query yummly yet.
 			*/
-			if(Math.floor((query.dbstart + result1.length)/query.maxResult) >= Math.floor(query.dbstart/query.maxResult)){
+			if((query.dbstart + result1.length) >= (query.dbstart + query.maxResult )){
 				callback(err1, result1, query);
 				return;	
 			}
@@ -65,48 +65,51 @@ function search(query, callback){
 			   this should alwyas return true, else the db is returning too many resuts
 			*/
 			else if( (query.dbstart + result1.length) < (query.dbstart + query.maxResult)){
-				query.start += result1.length
+				//nothing actually needs to happen here after all. It'll pass down to ym search below
 			}else{
 				err1 = "db returned too many results. This shoud not happen";
 			}
 		}
 		/* If database has partially filled a page, or has no results,
 		   Continue with a yummly query on the remaining length of the page
+		   do this by setting the maxresult to the remining number to query.
+		   we'll change maxresult back later
 		*/
-		else {
-			if(!err1 && (query.start + result1.length)<(query.start + query.maxResult)){
-				query.maxResult -= result1.length;
-			}
-
-			ym.search(query, function(err2, result2){
-				query.nextstart = query.start + query.maxResult;
-				query.maxResult = query.tempMaxResult;
-				delete query.tempMaxResult;
-
-
-				if(err2 && err1){
-					callback("Yummly and Internal DB error");
-					console.error("db error", err1);
-					 return console.error("yummly error", err2);
-				}
-				if(err1){
-					callback(err2, result2, query);
-					return console.error("database error", err1);
-				}
-				if(err2){
-					callback(err1, result1, query);
-					return console.error("yummly error", err2);
-				}
-				
-				/*
-					adjust yummly start for next query, based on the database results offset.
-					reset maxResult to query input.
-				*/
-				//no errors. merge results
-				callback(err1, result1.concat( result2 ), query);
-				//callback( result1 );
-			});
+		if(!err1 && (query.start + result1.length)<(query.start + query.maxResult)){
+			query.maxResult -= result1.length;
 		}
+
+		ym.search(query, function(err2, result2){
+			/*
+				set the maxresult back to the normal amount
+			*/
+			query.nextstart = query.start + query.maxResult;
+			query.maxResult = query.tempMaxResult;
+			delete query.tempMaxResult;
+
+
+			if(err2 && err1){
+				callback("Yummly and Internal DB error");
+				console.error("db error", err1);
+				 return console.error("yummly error", err2);
+			}
+			if(err1){
+				callback(err2, result2, query);
+				return console.error("database error", err1);
+			}
+			if(err2){
+				callback(err1, result1, query);
+				return console.error("yummly error", err2);
+			}
+			
+			/*
+				adjust yummly start for next query, based on the database results offset.
+				reset maxResult to query input.
+			*/
+			//no errors. merge results
+			callback(err1, result1.concat( result2 ), query);
+			//callback( result1 );
+		});
 	});
 }
 
