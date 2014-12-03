@@ -23,6 +23,10 @@ function getRecipeById(rid, callback){
 	}
 }
 
+function dbsearch(query, callback){
+	db.search(query,callback);
+};
+
 function search(query, callback){
 
 	for(var i in query.flavor){
@@ -41,45 +45,20 @@ function search(query, callback){
 	query.tempMaxResult = query.maxResult;
 	if(! query.start) query.start = 0;
 	if(! query.dbstart) query.dbstart = query.start;
-	 
+ 
 	if(query.q) query.recipeName = query.q; //this is to fix my yummly name blunder.
 
-	db.search(query, function(err1, result1, dbtotalMatchCount){
+	db.search(query, function(err1, result1){
 
 		if(!err1){
 			/*
 			   check if our database call has filled an entire page of results
 			   if it has, adjust the db search starting point
-			   and return these results. we have enough, so just query yummly for
-				the amount of results.
+			   and return these results. we have enough, don't need to query yummly yet.
 			*/
 			if((query.dbstart + result1.length) >= (query.dbstart + query.maxResult )){
-				if(! query.overallMatchCount){
-					//TODO: TEMP DROP QUERYMAX JUST FOR YUMLY RESULTS AMOUNT
-					query.tempMAX = query.maxResult;
-					query.maxResult = 1;
-					ym.search(query, function(err2, result2){
-						query.maxResult = query.tempMAX;
-						delete query.tempMAX;
-
-						if(err2){
-							query.totalMatchCount = 0;
-							query.dbtotalMatchCount = query.overallMatchCount = dbtotalMatchCount;
-							callback(err1, result1, query);
-							return;	
-						}else{
-							query.totalMatchCount = result2.totalMatchCount;
-							query.dbtotalMatchCount = dbtotalMatchCount;
-							query.overallMatchCount = query.totalMatchCount + query.dbtotalMatchCount;
-							callback(err1, result1, query);
-							return;
-						}
-					}
-				}
-				else{
-					callback(err1, result1, query);
-					return;	
-				}
+				callback(err1, result1, query);
+				return;	
 			}
 			/* check that the results didn't fill an entire page
 			   adjust maxresults remporarily
@@ -108,44 +87,27 @@ function search(query, callback){
 			query.maxResult = query.tempMaxResult;
 			delete query.tempMaxResult;
 
+
 			if(err2 && err1){
 				callback("Yummly and Internal DB error");
 				console.error("db error", err1);
 				 return console.error("yummly error", err2);
 			}
 			if(err1){
-				if(!query.overallMatchCount){
-					//yum error. only use db match count
-					query.dbtotalMatchCount = 0;
-					query.overallMatchCount = query.totalMatchCount = result2.totalMatchCount;
-				}
-				callback(err2, result2.matches, query);
+				callback(err2, result2, query);
 				return console.error("database error", err1);
 			}
 			if(err2){
-				if(!query.overallMatchCount){
-					//yum error. only use db match count
-					query.totalMatchCount = 0;
-					query.overallMatchCount = query.dbtotalMatchCount = dbtotalMatchCount;
-				}
 				callback(err1, result1, query);
 				return console.error("yummly error", err2);
 			}
-			/*
-				if we have no overall match count, set the db and yum match counts
-			*/
-
-			if(! query.overallMatchCount){
-				query.totalMatchCount = result2.totalMatchCount;
-				query.dbtotalMatchCount = dbtotalMatchCount;
-				query.overallMatchCount = query.totalMatchCount + query.dbtotalMatchCount;
-			}	
+			
 			/*
 				adjust yummly start for next query, based on the database results offset.
 				reset maxResult to query input.
 			*/
 			//no errors. merge results
-			callback(err1, result1.concat( result2.matches ), query);
+			callback(err1, result1.concat( result2 ), query);
 			//callback( result1 );
 		});
 	});
