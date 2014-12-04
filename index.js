@@ -42,9 +42,10 @@ function search(query, callback){
 		set search size defaults, if not set
 	*/
 	if(! query.maxResult) query.maxResult = 6;
+	if(! query.nextstart) query.nextstart = 0;
 	query.tempMaxResult = query.maxResult;
 	if(! query.start) query.start = 0;
-	if(! query.dbstart) query.dbstart = query.start;
+	if(! query.dbstart) { query.dbstart = query.start; }
  
 	if(query.q) query.recipeName = query.q; //this is to fix my yummly name blunder.
 
@@ -57,6 +58,7 @@ function search(query, callback){
 			   and return these results. we have enough, don't need to query yummly yet.
 			*/
 			if((query.dbstart + result1.length) >= (query.dbstart + query.maxResult )){
+				query.dbstart = query.dbstart + query.maxResult;
 				callback(err1, result1, query);
 				return;	
 			}
@@ -65,7 +67,7 @@ function search(query, callback){
 			   this should alwyas return true, else the db is returning too many resuts
 			*/
 			else if( (query.dbstart + result1.length) < (query.dbstart + query.maxResult)){
-				//nothing actually needs to happen here after all. It'll pass down to ym search below
+				query.dbstart += result1.length;
 			}else{
 				err1 = "db returned too many results. This shoud not happen";
 			}
