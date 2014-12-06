@@ -1,7 +1,7 @@
 Using the cookups database
 ================================
 To use the database, you will need to perform a small bit of set up
-- set psql password to cookups.org
+- set your user's psql password to cookups.org (sorry if this seems a bit crummy!)
 - run the database building script
 - install the cookupsdb module
 - start coding!
@@ -11,6 +11,8 @@ Each of these steps are detailed below
 
 Example search Object
 ============================
+This is the format of an object that's sent into the database to search on yummly and postgres
+
 ```javascript
 example object:
 var query = {
@@ -54,23 +56,42 @@ var query = {
 
 
 
-Database Prep Work
+Database Prep Work For Linux
 ========================================
 
-##PostgreSQL user and password
+##PostgreSQL install using Debian Package Manager Apt
+```bash
+$ sudo apt-get update
+$ sudo apt-get install postgresql-9.3
+$ sudo apt-get install g++
+$ sudo apt-get install postgresql-server-dev-9.3
+```
+
+##PostgreSQL user, password, and default db
 The postgres user will take your system username in your terminal shell. On the server, this will be cinnamoncrickets. In my case it is jon. 
 This, by default, is the user that accesses the database.
+
+If you haven't created a postgres user and default database,
+Start postgres using the 'postgres' user, and create yourself a database.
+This default db won't be used for cookups, but you still need a username anyway.
+```bash
+$ sudo -u postgres psql
+postgres=> create user --yourhomeusername-- createdb createuser password 'cookups.org';
+postgres=> create database --yourusername-- owner --yourusername--;
+postgres=> \q
+
+```
 
 To access our database, the module logs in with your username and password: cookups.org ..... this is set in code
 
 **NOTE:** this password is **not** your system password (for sudo calls and such). This password is only used in psql.
 
-To change your users psql password to work with cookups,
+To change your users psql password to work with cookups, if not already set
 ```bash
 sudo -u postgres psql -c "alter user $USER password 'cookups.org'"
 ```
 
-Once this psql password is set for your current user, the module will use your username to access the database.
+Once this psql password is set for your current user, the module can use your username to access the database.
 
 **NOTE:** when you're set up and accessing database,**If** you recieve an error that begins like: 
 ```bash
@@ -95,7 +116,7 @@ This script is found in the setup_database/ directory
 
 This script create a dababase named 'cookupsdb' and will erase any existing cookups tables in your database, create new tables, and populate tables with silly starter data.
 
-**NOTE:** whenever changes are made to the database and module, you should run this script again. The database schema/design is likely to change when new features are added, and this will set up the database to work with the module.
+**NOTE:** whenever changes are made to the database and module, you should run this script again. The database schema/design might change when new features are added, and this will ensure that the database to work with the module.
 
 
 ###The Scripts Components Explained
@@ -180,13 +201,16 @@ db.login(user, function(error, result){
 });
 ```
 
+All methods are documented in [cookups dspec](https://github.com/umass-cs-326/team-cinnamon-crickets/blob/master/docs/dspec/dspec.md).
+Also, you can refer to 'databaseConsoleInput.js' to see actual implementation examples how to use the functions.
+
 Database Access Tool: databaseConsoleInput
 ============================================
 
 ##Using and testing the database functions
 
 ###databaseConsoleInput.js
-**databaseConsoleInput.js** is a Node.js program that accesses the cookups database. It provides example uses of each database feature. It will include the working features as they are implemented in the module. **Note** that this is not the module - It uses the module and demonstrates how to model a program to use the module.
+**databaseConsoleInput.js** is a Node.js program/tool that accesses the cookups database. It provides example uses of different database functions. It includes most of the module's features as they are implemented in the module, however, more advanced features don't take command line input, and instead have a hardcoaded object. **Note** that this is not the module - It uses the module and demonstrates how to model a program to use the module.
 
 run databaseConsoleInput.js
 
@@ -248,10 +272,5 @@ requires useremail and password
 ~/$ node databaseControlInput.js -l aaron aar@gmail.com
 ```
 
-Misc
-========================================
-	
-# Currently Unimplemented
-- recipe attributes: holiday, course, cuisine
 
 *JonSaj*
